@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuestra Boda | 12 de Diciembre</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Tone.js para melodía romántica de boda -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+
+    <!-- Google Fonts: Tipografías románticas y elegantes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Configuración de paleta femenino Blanco y Azul Marino -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: '#0F2547',       /* Azul marino principal */
+                        navyDark: '#09172E',   /* Azul marino profundo */
+                        navyAccent: '#264B82', /* Azul marino medio romántico */
+                        navySoft: '#EEF3FA',   /* Blanco azulado suave */
+                        mistBlue: '#DCE6F5',   /* Azul niebla delicado */
+                        pearl: '#FAFBFD',      /* Blanco perla */
+                        charcoal: '#1E293B'
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+                        script: ['"Great Vibes"', 'cursive'],
+                        sans: ['"Montserrat"', 'sans-serif']
+                    }
+                }
+            }
+        };
+    </script>
+
+    <style>
+        /* Fondo sutil blanco con destellos azul niebla y trama delicada */
+        .bg-wedding-pattern {
+            background-color: #FFFFFF;
+            background-image:
+                radial-gradient(circle at 15% 20%, rgba(220, 230, 245, 0.55) 0%, transparent 45%),
+                radial-gradient(circle at 85% 80%, rgba(220, 230, 245, 0.55) 0%, transparent 45%),
+                radial-gradient(rgba(15, 37, 71, 0.09) 0.8px, transparent 0.8px);
+            background-size: 100% 100%, 100% 100%, 26px 26px;
+        }
+
+        /* Sombra suave para tarjetas femeninas */
+        .feminine-card {
+            box-shadow: 0 22px 50px -15px rgba(15, 37, 71, 0.14), 0 0 0 1px rgba(15, 37, 71, 0.08);
+        }
+
+        /* Animación de entrada suave */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-up {
+            animation: fadeUp 1s ease-out forwards;
+        }
+
+        /* Pulso suave para el botón flotante de música */
+        @keyframes gentlePulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(15, 37, 71, 0.35); }
+            50% { box-shadow: 0 0 0 10px rgba(15, 37, 71, 0); }
+        }
+        .music-playing {
+            animation: gentlePulse 2.4s infinite;
+        }
+
+        /* =========================================================
+           ESTILOS DEL SOBRE INTERACTIVO 3D
+           ========================================================= */
+        .envelope-stage {
+            perspective: 1200px;
+        }
+
+        .envelope-wrapper {
+            position: relative;
+            width: min(330px, 86vw);
+            height: 225px;
+            cursor: pointer;
+            transition: transform 0.35s ease;
+        }
+
+        .envelope-wrapper:hover {
+            transform: translateY(-4px) scale(1.02);
+        }
+
+        /* Cuerpo trasero del sobre */
+        .envelope-back {
+            position: absolute;
+            inset: 0;
+            background: #0B1D38;
+            border-radius: 14px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.55);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        /* Tarjeta interior blanca que se desliza hacia arriba al abrir */
+        .envelope-letter {
+            position: absolute;
+            left: 14px;
+            right: 14px;
+            bottom: 14px;
+            height: 192px;
+            background: #FFFFFF;
+            border-radius: 10px;
+            z-index: 2;
+            transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.35s;
+            box-shadow: 0 6px 20px rgba(9, 23, 46, 0.25);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            border: 1px solid rgba(15, 37, 71, 0.12);
+        }
+
+        /* Pliegues frontales del sobre */
+        .envelope-front {
+            position: absolute;
+            inset: 0;
+            z-index: 3;
+            border-radius: 14px;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .envelope-front::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #132F5B 0%, #0F2547 100%);
+            clip-path: polygon(0 0, 50% 52%, 0 100%);
+        }
+
+        .envelope-front::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(225deg, #163668 0%, #0F2547 100%);
+            clip-path: polygon(100% 0, 50% 52%, 100% 100%);
+        }
+
+        .envelope-bottom {
+            position: absolute;
+            inset: 0;
+            z-index: 4;
+            border-radius: 14px;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .envelope-bottom::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, #183A6E 0%, #10284D 100%);
+            clip-path: polygon(0 100%, 50% 48%, 100% 100%);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Solapa superior del sobre que gira en 3D */
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 122px;
+            z-index: 5;
+            transform-origin: top center;
+            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1), z-index 0s linear 0.35s;
+            pointer-events: none;
+        }
+
+        .envelope-flap::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, #1A3D73 0%, #112A52 100%);
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+            border-top-left-radius: 14px;
+            border-top-right-radius: 14px;
+            filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.28));
+        }
+
+        /* Sello de lacre blanco perla con detalle azul marino */
+        .wax-seal {
+            position: absolute;
+            top: 96px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 58px;
+            height: 58px;
+            border-radius: 9999px;
+            background: radial-gradient(circle at 35% 30%, #FFFFFF 0%, #E8EFFA 75%, #C8D7EE 100%);
+            border: 2px solid #FFFFFF;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35), inset 0 0 0 4px rgba(15, 37, 71, 0.14);
+            z-index: 6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.35s ease, transform 0.35s ease;
+        }
+
+        /* Estado abierto del sobre */
+        .envelope-wrapper.is-open .envelope-flap {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+
+        .envelope-wrapper.is-open .wax-seal {
+            opacity: 0;
+            transform: translateX(-50%) scale(0.6);
+        }
+
+        .envelope-wrapper.is-open .envelope-letter {
+            transform: translateY(-98px);
+        }
+    </style>
+</head>
+<body class="bg-white text-charcoal font-sans antialiased selection:bg-navy selection:text-white overflow-x-hidden overflow-y-hidden">
+
+    <!-- =========================================================
+         LIENZO DE PÉTALOS CAYENDO SUAVEMENTE (CANVAS RESPONSIVO)
+         ========================================================= -->
+    <canvas id="petals-canvas" class="fixed inset-0 z-30 pointer-events-none w-full h-full"></canvas>
+
+    <!-- =========================================================
+         BOTÓN FLOTANTE DE MÚSICA ROMÁNTICA
+         ========================================================= -->
+    <button id="music-toggle" type="button" aria-label="Reproducir o pausar música"
+        class="fixed bottom-5 right-5 z-40 hidden items-center gap-2 bg-white/95 backdrop-blur-md text-navy border border-navy/20 shadow-lg hover:bg-navySoft px-4 py-3 rounded-full transition-all duration-300">
+        <span id="music-icon-on" class="flex items-center justify-center">
+            <svg class="w-4 h-4 text-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2z"/>
+            </svg>
+        </span>
+        <span id="music-icon-off" class="hidden items-center justify-center">
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"/>
+            </svg>
+        </span>
+        <span id="music-label" class="text-[11px] uppercase tracking-widest font-semibold hidden sm:inline">Música</span>
+    </button>
+
+    <!-- =========================================================
+         PANTALLA DE BIENVENIDA: SOBRE INTERACTIVO ABRIÉNDOSE
+         ========================================================= -->
+    <div id="envelope-overlay" class="fixed inset-0 z-50 bg-gradient-to-b from-navyDark via-navy to-navyDark flex flex-col items-center justify-center px-4 text-center transition-opacity duration-700">
+
+        <p class="uppercase tracking-[0.35em] text-[11px] sm:text-xs text-white/80 mb-8 animate-pulse">
+            Tienes una invitación especial
+        </p>
+
+        <!-- Sobre 3D interactivo -->
+        <div class="envelope-stage">
+            <div id="wedding-envelope" class="envelope-wrapper" role="button" tabindex="0" aria-label="Abrir sobre de invitación de boda">
+                <div class="envelope-back"></div>
+
+                <!-- Tarjeta interior que emerge -->
+                <div class="envelope-letter">
+                    <div class="w-full h-full border border-navy/15 rounded-lg flex flex-col items-center justify-center px-3">
+                        <span class="text-[9px] uppercase tracking-[0.3em] text-navyAccent font-semibold mb-1">Nos Casamos</span>
+                        <span class="font-script text-4xl text-navy leading-none mb-1">Nuestra Boda</span>
+                        <span class="text-[10px] uppercase tracking-[0.25em] text-slate-500">12 de Diciembre</span>
+                    </div>
+                </div>
+
+                <!-- Pliegues del sobre -->
+                <div class="envelope-front"></div>
+                <div class="envelope-bottom"></div>
+                <div class="envelope-flap"></div>
+
+                <!-- Sello blanco perla -->
+                <div class="wax-seal">
+                    <svg class="w-6 h-6 text-navy" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <button id="open-envelope-btn" type="button" class="mt-10 inline-flex items-center gap-2.5 bg-white text-navy hover:bg-navySoft font-semibold text-xs sm:text-sm uppercase tracking-[0.2em] px-8 py-3.5 rounded-full shadow-lg transition-all duration-300">
+            <svg class="w-4 h-4 text-navyAccent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2z"/>
+            </svg>
+            Toca para abrir el sobre
+        </button>
+    </div>
+
+    <!-- =========================================================
+         SECCIÓN 1: PORTADA / HERO (ESTILO FEMENINO BLANCO Y AZUL MARINO)
+         ========================================================= -->
+    <header class="relative min-h-screen flex flex-col items-center justify-center px-4 py-14 sm:py-16 text-center bg-wedding-pattern border-b border-navy/10">
+        <!-- Tarjeta principal en arco con encaje delicado y motivos florales -->
+        <div class="relative z-10 w-full max-w-2xl bg-white/95 backdrop-blur-sm border border-navy/15 rounded-[2.5rem] sm:rounded-t-[11rem] sm:rounded-b-[2.5rem] p-8 sm:p-16 feminine-card animate-fade-up overflow-hidden">
+
+            <!-- Doble marco interior femenino -->
+            <div class="absolute inset-3 sm:inset-4 border border-navy/15 rounded-[2rem] sm:rounded-t-[10rem] sm:rounded-b-[2rem] pointer-events-none"></div>
+            <div class="absolute inset-5 sm:inset-6 border border-dashed border-navy/15 rounded-[1.6rem] sm:rounded-t-[9.2rem] sm:rounded-b-[1.6rem] pointer-events-none"></div>
+
+            <!-- Adorno floral esquina superior izquierda -->
+            <svg class="absolute top-3 left-3 w-24 h-24 sm:w-32 sm:h-32 text-navy/15 pointer-events-none" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 108C18 65 45 30 105 14" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+                <path d="M34 64C22 55 18 40 28 32C38 40 42 54 34 64Z" fill="currentColor" opacity="0.45"/>
+                <path d="M58 38C48 26 52 14 66 12C70 24 68 34 58 38Z" fill="currentColor" opacity="0.45"/>
+                <path d="M24 88C12 82 10 68 18 62C28 68 30 80 24 88Z" fill="currentColor" opacity="0.35"/>
+                <circle cx="48" cy="52" r="3" fill="currentColor"/>
+                <circle cx="78" cy="24" r="2.5" fill="currentColor"/>
+            </svg>
+
+            <!-- Adorno floral esquina superior derecha -->
+            <svg class="absolute top-3 right-3 w-24 h-24 sm:w-32 sm:h-32 text-navy/15 pointer-events-none transform -scale-x-100" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 108C18 65 45 30 105 14" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+                <path d="M34 64C22 55 18 40 28 32C38 40 42 54 34 64Z" fill="currentColor" opacity="0.45"/>
+                <path d="M58 38C48 26 52 14 66 12C70 24 68 34 58 38Z" fill="currentColor" opacity="0.45"/>
+                <path d="M24 88C12 82 10 68 18 62C28 68 30 80 24 88Z" fill="currentColor" opacity="0.35"/>
+                <circle cx="48" cy="52" r="3" fill="currentColor"/>
+                <circle cx="78" cy="24" r="2.5" fill="currentColor"/>
+            </svg>
+
+            <!-- Corona floral central -->
+            <div class="relative flex justify-center mb-5 text-navy">
+                <svg class="w-32 h-14" viewBox="0 0 160 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M80 26C65 26 58 14 42 14C28 14 20 26 8 24" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+                    <path d="M80 26C95 26 102 14 118 14C132 14 140 26 152 24" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+                    <path d="M80 26C70 33 60 36 48 33" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.45"/>
+                    <path d="M80 26C90 33 100 36 112 33" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.45"/>
+                    <circle cx="80" cy="24" r="4" fill="currentColor"/>
+                    <circle cx="74" cy="20" r="2.5" fill="currentColor" opacity="0.35"/>
+                    <circle cx="86" cy="20" r="2.5" fill="currentColor" opacity="0.35"/>
+                    <circle cx="80" cy="16" r="2.5" fill="currentColor" opacity="0.35"/>
+                    <circle cx="42" cy="14" r="2" fill="currentColor" opacity="0.6"/>
+                    <circle cx="118" cy="14" r="2" fill="currentColor" opacity="0.6"/>
+                </svg>
+            </div>
+
+            <p class="relative uppercase tracking-[0.35em] text-[11px] sm:text-xs text-navyAccent font-medium mb-4">
+                Con la bendición de Dios &bull; ¡Nos Casamos!
+            </p>
+
+            <!-- Título principal / Nombres editables -->
+            <h1 class="relative font-script text-6xl sm:text-7xl md:text-8xl text-navy mb-2 leading-tight">
+                Nuestra Boda
+            </h1>
+            <p class="relative font-serif italic text-xl sm:text-2xl text-navyAccent/90 mb-8">
+                Unimos nuestras vidas para siempre
+            </p>
+
+            <!-- Fecha destacada -->
+            <div class="relative flex items-center justify-center gap-4 sm:gap-6 my-8 py-4 border-y border-navy/15">
+                <span class="uppercase tracking-[0.2em] text-xs sm:text-sm text-slate-500 font-medium">Sábado</span>
+                <div class="flex flex-col items-center px-6 border-x border-navy/15">
+                    <span class="font-serif text-4xl sm:text-5xl font-bold text-navy leading-none">12</span>
+                    <span class="uppercase tracking-[0.25em] text-[11px] text-navyAccent font-semibold mt-1.5">Diciembre</span>
+                </div>
+                <span class="uppercase tracking-[0.2em] text-xs sm:text-sm text-slate-500 font-medium">16:45 HRS</span>
+            </div>
+
+            <p class="relative text-slate-600 mb-8 tracking-widest uppercase text-[11px] sm:text-xs font-medium">
+                Naranjal, Guayas &bull; Ecuador
+            </p>
+
+            <!-- Cuenta regresiva circular -->
+            <div class="relative mb-9">
+                <p class="font-serif italic text-base text-navyAccent mb-3">Falta muy poco para el gran sí</p>
+                <div class="grid grid-cols-4 gap-2 sm:gap-4 max-w-md mx-auto">
+                    <div class="bg-navySoft/80 border border-navy/10 rounded-full aspect-square flex flex-col items-center justify-center p-2 shadow-sm">
+                        <span id="days" class="block font-serif text-2xl sm:text-3xl font-bold text-navy leading-none">00</span>
+                        <span class="text-[9px] sm:text-[10px] uppercase tracking-wider text-slate-500 mt-1">Días</span>
+                    </div>
+                    <div class="bg-navySoft/80 border border-navy/10 rounded-full aspect-square flex flex-col items-center justify-center p-2 shadow-sm">
+                        <span id="hours" class="block font-serif text-2xl sm:text-3xl font-bold text-navy leading-none">00</span>
+                        <span class="text-[9px] sm:text-[10px] uppercase tracking-wider text-slate-500 mt-1">Horas</span>
+                    </div>
+                    <div class="bg-navySoft/80 border border-navy/10 rounded-full aspect-square flex flex-col items-center justify-center p-2 shadow-sm">
+                        <span id="minutes" class="block font-serif text-2xl sm:text-3xl font-bold text-navy leading-none">00</span>
+                        <span class="text-[9px] sm:text-[10px] uppercase tracking-wider text-slate-500 mt-1">Min</span>
+                    </div>
+                    <div class="bg-navySoft/80 border border-navy/10 rounded-full aspect-square flex flex-col items-center justify-center p-2 shadow-sm">
+                        <span id="seconds" class="block font-serif text-2xl sm:text-3xl font-bold text-navy leading-none">00</span>
+                        <span class="text-[9px] sm:text-[10px] uppercase tracking-wider text-slate-500 mt-1">Seg</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botón CTA hacia la confirmación -->
+            <a href="#rsvp" class="relative inline-flex items-center justify-center gap-2 bg-navy hover:bg-navyAccent text-white font-medium text-xs sm:text-sm tracking-[0.2em] uppercase px-9 py-4 rounded-full shadow-md hover:shadow-lg transition-all duration-300">
+                Confirmar Asistencia
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+                </svg>
+            </a>
+        </div>
+    </header>
+
+    <!-- =========================================================
+         SECCIÓN 2: MENSAJE EMOTIVO (IMPORTANCIA DE SU PRESENCIA)
+         ========================================================= -->
+    <section class="py-16 sm:py-24 px-4 bg-gradient-to-b from-navy via-navyDark to-navy text-white relative">
+        <div class="max-w-3xl mx-auto text-center relative z-10">
+            <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-white/10 text-white border border-white/25 mb-6 shadow-inner">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.4" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                </svg>
+            </div>
+            <p class="font-script text-4xl sm:text-5xl text-mistBlue mb-2">Con todo nuestro amor</p>
+            <h2 class="font-serif text-2xl sm:text-4xl text-white font-semibold mb-6">
+                Tu presencia es el mejor regalo
+            </h2>
+            <p class="text-white/85 leading-relaxed text-base sm:text-lg mb-7 font-light">
+                Hay momentos en la vida que son especiales por sí solos, pero compartirlos con las personas que más queremos los convierte en recuerdos inolvidables.
+            </p>
+            <div class="relative border-y border-white/20 py-7 px-3">
+                <p class="leading-relaxed font-serif italic text-xl sm:text-2xl text-white">
+                    "Para nosotros es inmensamente importante contar contigo en este día tan esperado. Cada abrazo, cada sonrisa y tu compañía al dar este gran paso harán que nuestra boda esté verdaderamente completa."
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================================================
+         SECCIÓN 3: DETALLES DEL EVENTO (CEREMONIA Y RECEPCIÓN)
+         ========================================================= -->
+    <section class="py-16 sm:py-24 px-4 bg-pearl border-b border-navy/10">
+        <div class="max-w-5xl mx-auto">
+            <div class="text-center mb-14">
+                <p class="font-script text-3xl sm:text-4xl text-navyAccent mb-1">Acompáñanos</p>
+                <h2 class="font-serif text-3xl sm:text-5xl text-navy font-semibold">¿Cuándo y Dónde?</h2>
+                <div class="w-16 h-[1px] bg-navy/30 mx-auto mt-4"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Tarjeta 1: Ceremonia Religiosa -->
+                <div class="relative bg-white rounded-[2rem] p-8 sm:p-11 feminine-card border border-navy/10 flex flex-col items-center text-center hover:-translate-y-1 transition-all duration-300">
+                    <div class="absolute inset-2.5 border border-navy/10 rounded-[1.6rem] pointer-events-none"></div>
+                    <div class="w-16 h-16 rounded-full bg-navySoft border border-navy/15 text-navy flex items-center justify-center mb-6 shadow-sm">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 2v4m-2-2h4m-2 2l-5 4v12h10V10l-5-4zm-2 16v-5a2 2 0 114 0v5"/>
+                        </svg>
+                    </div>
+                    <span class="uppercase tracking-[0.25em] text-[11px] font-semibold text-navyAccent mb-2">Ceremonia Religiosa</span>
+                    <h3 class="font-serif text-2xl sm:text-3xl text-navy font-semibold mb-3">Iglesia Católica San José</h3>
+                    <p class="text-slate-600 text-sm sm:text-base mb-5 leading-relaxed">
+                        Cantón Naranjal, Provincia del Guayas
+                    </p>
+                    <div class="bg-navySoft/80 border border-navy/10 rounded-full px-6 py-2.5 mb-7">
+                        <span class="text-navy font-semibold text-sm tracking-wide">12 de Diciembre &bull; 16:45 hrs</span>
+                    </div>
+                    <a href="https://www.google.com/maps/search/?api=1&query=Iglesia+Catolica+San+Jose+Naranjal+Guayas+Ecuador" target="_blank" rel="noopener noreferrer"
+                        class="mt-auto inline-flex items-center gap-2 border border-navy text-navy hover:bg-navy hover:text-white text-xs uppercase tracking-[0.2em] font-semibold px-7 py-3 rounded-full transition-colors duration-300">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                        Ver en Google Maps
+                    </a>
+                </div>
+
+                <!-- Tarjeta 2: Recepción -->
+                <div class="relative bg-white rounded-[2rem] p-8 sm:p-11 feminine-card border border-navy/10 flex flex-col items-center text-center hover:-translate-y-1 transition-all duration-300">
+                    <div class="absolute inset-2.5 border border-navy/10 rounded-[1.6rem] pointer-events-none"></div>
+                    <div class="w-16 h-16 rounded-full bg-navySoft border border-navy/15 text-navy flex items-center justify-center mb-6 shadow-sm">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M5 14.5l-1.395 1.395a.75.75 0 00.53 1.28h15.73a.75.75 0 00.53-1.28L19 14.5M12 17.25v4.5m-3 0h6"/>
+                        </svg>
+                    </div>
+                    <span class="uppercase tracking-[0.25em] text-[11px] font-semibold text-navyAccent mb-2">Recepción &amp; Celebración</span>
+                    <h3 class="font-serif text-2xl sm:text-3xl text-navy font-semibold mb-3">Salón Gala VIP</h3>
+                    <p class="text-slate-600 text-sm sm:text-base mb-5 leading-relaxed">
+                        Cantón Naranjal, Provincia del Guayas
+                    </p>
+                    <div class="bg-navySoft/80 border border-navy/10 rounded-full px-6 py-2.5 mb-7">
+                        <span class="text-navy font-semibold text-sm tracking-wide">Posterior a la Ceremonia</span>
+                    </div>
+                    <a href="https://www.google.com/maps/search/?api=1&query=Gala+VIP+Naranjal+Guayas+Ecuador" target="_blank" rel="noopener noreferrer"
+                        class="mt-auto inline-flex items-center gap-2 border border-navy text-navy hover:bg-navy hover:text-white text-xs uppercase tracking-[0.2em] font-semibold px-7 py-3 rounded-full transition-colors duration-300">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                        Ver en Google Maps
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================================================
+         SECCIÓN 4: CÓDIGO DE VESTIMENTA Y NOTA DE SOLO ADULTOS
+         ========================================================= -->
+    <section class="py-16 sm:py-24 px-4 bg-white">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-12">
+                <p class="font-script text-3xl sm:text-4xl text-navyAccent mb-1">Detalles pensados con cariño</p>
+                <h2 class="font-serif text-3xl sm:text-4xl text-navy font-semibold">Para tener en cuenta</h2>
+                <div class="w-16 h-[1px] bg-navy/30 mx-auto mt-4"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+                <!-- Código de Vestimenta -->
+                <div class="relative bg-navySoft/60 border border-navy/15 rounded-[2rem] p-8 text-center flex flex-col items-center shadow-sm">
+                    <div class="w-14 h-14 rounded-full bg-white border border-navy/20 text-navy flex items-center justify-center mb-5 shadow-sm">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-serif text-2xl text-navy font-semibold mb-2">Código de Vestimenta</h3>
+                    <p class="text-xs uppercase tracking-[0.25em] text-navyAccent font-semibold mb-4">Formal / Elegante</p>
+                    <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                        Con mucho cariño te recordamos que el <strong class="text-navy font-semibold">color blanco está reservado exclusivamente para la novia</strong>. Agradecemos elegir cualquier otro tono para acompañarnos.
+                    </p>
+                </div>
+
+                <!-- Política de Solo Adultos -->
+                <div class="relative bg-navySoft/60 border border-navy/15 rounded-[2rem] p-8 text-center flex flex-col items-center shadow-sm">
+                    <div class="w-14 h-14 rounded-full bg-white border border-navy/20 text-navy flex items-center justify-center mb-5 shadow-sm">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-serif text-2xl text-navy font-semibold mb-2">Evento Solo Adultos</h3>
+                    <p class="text-xs uppercase tracking-[0.25em] text-navyAccent font-semibold mb-4">Sin Niños</p>
+                    <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                        <strong class="text-navy font-semibold">Amamos a sus pequeños</strong>, pero creemos que es lo mejor para que todos puedan disfrutar al máximo de la velada. Por esta ocasión, la celebración será únicamente para adultos.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================================================
+         SECCIÓN 5: CONFIRMACIÓN DE ASISTENCIA (GOOGLE FORMS)
+         ========================================================= -->
+    <section id="rsvp" class="py-16 sm:py-24 px-4 bg-wedding-pattern border-t border-navy/10">
+        <div class="max-w-2xl mx-auto">
+            <div class="relative bg-white rounded-[2.2rem] p-8 sm:p-12 feminine-card border border-navy/15 text-center overflow-hidden">
+                <div class="absolute inset-3 border border-navy/10 rounded-[1.8rem] pointer-events-none"></div>
+
+                <div class="relative z-10">
+                    <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-navySoft border border-navy/15 text-navy mb-5">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+
+                    <p class="font-script text-4xl sm:text-5xl text-navyAccent mb-1">Confirmar Asistencia</p>
+                    <h2 class="font-serif text-2xl sm:text-4xl text-navy font-semibold mb-4">
+                        ¡Queremos contar contigo!
+                    </h2>
+                    <p class="text-slate-600 text-sm sm:text-base leading-relaxed max-w-lg mx-auto mb-7">
+                        Por favor registra tus datos en nuestro formulario oficial de invitados. Si asistirás con un acompañante, recuerda ingresar también su <strong class="text-navy font-semibold">nombre y apellido</strong>.
+                    </p>
+
+                    <!-- Botón directo a Google Forms -->
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-3.5">
+                        <a href="https://forms.gle/fBMr2Yt3Q5am9mwW6" target="_blank" rel="noopener noreferrer"
+                            class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-navy hover:bg-navyAccent text-white font-semibold text-xs sm:text-sm uppercase tracking-[0.2em] px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300">
+                            <span>Confirmar en Google Forms</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                            </svg>
+                        </a>
+
+                        <button id="copy-form-btn" type="button"
+                            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white hover:bg-navySoft text-navy border border-navy/25 font-medium text-xs uppercase tracking-[0.18em] px-6 py-4 rounded-full transition-colors duration-300">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                            </svg>
+                            <span id="copy-btn-text">Copiar enlace</span>
+                        </button>
+                    </div>
+
+                    <!-- Mensaje de confirmación al copiar enlace (sin alert()) -->
+                    <p id="copy-feedback" class="hidden mt-4 text-xs font-medium text-navyAccent bg-navySoft border border-navy/15 rounded-full py-2 px-4 inline-block">
+                        ¡Enlace copiado al portapapeles!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================================================
+         PIE DE PÁGINA
+         ========================================================= -->
+    <footer class="py-12 px-4 bg-navyDark text-white/80 text-center">
+        <p class="font-script text-4xl text-white mb-2">¡Te esperamos con mucha ilusión!</p>
+        <p class="text-xs uppercase tracking-[0.25em] text-mistBlue/80">
+            12 de Diciembre &bull; Naranjal, Guayas
+        </p>
+    </footer>
+
+    <!-- =========================================================
+         LÓGICA JAVASCRIPT (PÉTALOS, MÚSICA, SOBRE, CUENTA REGRESIVA)
+         ========================================================= -->
+    <script>
+        const GOOGLE_FORM_URL = "https://forms.gle/fBMr2Yt3Q5am9mwW6";
+
+        /**
+         * 1. EFECTO DE PÉTALOS CAYENDO SUAVEMENTE EN CANVAS RESPONSIVO
+         */
+        function initPetals() {
+            const canvas = document.getElementById("petals-canvas");
+            if (!canvas) return;
+            const ctx = canvas.getContext("2d");
+
+            let width = 0;
+            let height = 0;
+            const petals = [];
+            const PETAL_COUNT = 26;
+            const colors = [
+                "rgba(255, 255, 255, 0.88)",
+                "rgba(241, 245, 249, 0.85)",
+                "rgba(219, 234, 254, 0.72)",
+                "rgba(191, 219, 254, 0.55)"
+            ];
+
+            function resizeCanvas() {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            }
+
+            function createPetal(randomY = false) {
+                return {
+                    x: Math.random() * width,
+                    y: randomY ? Math.random() * height : -20 - Math.random() * 60,
+                    size: 7 + Math.random() * 8,
+                    speedY: 0.45 + Math.random() * 0.85,
+                    speedX: (Math.random() - 0.5) * 0.4,
+                    swayAmp: 0.35 + Math.random() * 0.75,
+                    swaySpeed: 0.01 + Math.random() * 0.018,
+                    angle: Math.random() * Math.PI * 2,
+                    spin: (Math.random() - 0.5) * 0.025,
+                    flip: Math.random() * Math.PI,
+                    flipSpeed: 0.015 + Math.random() * 0.02,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    time: Math.random() * 100
+                };
+            }
+
+            resizeCanvas();
+            for (let i = 0; i < PETAL_COUNT; i++) {
+                petals.push(createPetal(true));
+            }
+            window.addEventListener("resize", resizeCanvas);
+
+            function drawPetal(p) {
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.angle);
+                ctx.scale(1, 0.55 + Math.abs(Math.sin(p.flip)) * 0.45);
+
+                ctx.beginPath();
+                ctx.moveTo(0, -p.size);
+                ctx.bezierCurveTo(p.size * 0.9, -p.size * 0.7, p.size * 0.9, p.size * 0.7, 0, p.size);
+                ctx.bezierCurveTo(-p.size * 0.9, p.size * 0.7, -p.size * 0.9, -p.size * 0.7, 0, -p.size);
+                ctx.closePath();
+
+                ctx.fillStyle = p.color;
+                ctx.shadowColor = "rgba(15, 37, 71, 0.14)";
+                ctx.shadowBlur = 4;
+                ctx.fill();
+                ctx.restore();
+            }
+
+            function animatePetals() {
+                ctx.clearRect(0, 0, width, height);
+                for (let i = 0; i < petals.length; i++) {
+                    const p = petals[i];
+                    p.time += 1;
+                    p.y += p.speedY;
+                    p.x += p.speedX + Math.sin(p.time * p.swaySpeed) * p.swayAmp;
+                    p.angle += p.spin;
+                    p.flip += p.flipSpeed;
+
+                    drawPetal(p);
+
+                    if (p.y > height + 30 || p.x < -40 || p.x > width + 40) {
+                        petals[i] = createPetal(false);
+                    }
+                }
+                requestAnimationFrame(animatePetals);
+            }
+
+            animatePetals();
+        }
+
+        /**
+         * 2. MÚSICA ROMÁNTICA DE BODA CON TONE.JS (PIANO / ARPA)
+         */
+        const weddingMusic = {
+            isPlaying: false,
+            isInitialized: false,
+            start: null,
+            toggle: null
+        };
+
+        function initWeddingMusic() {
+            const toggleBtn = document.getElementById("music-toggle");
+            const iconOn = document.getElementById("music-icon-on");
+            const iconOff = document.getElementById("music-icon-off");
+            const label = document.getElementById("music-label");
+
+            let synth = null;
+            let padSynth = null;
+            let melodyLoop = null;
+
+            const updateMusicUI = (playing) => {
+                if (!toggleBtn) return;
+                if (playing) {
+                    iconOn.classList.remove("hidden");
+                    iconOn.classList.add("flex");
+                    iconOff.classList.add("hidden");
+                    iconOff.classList.remove("flex");
+                    toggleBtn.classList.add("music-playing");
+                    if (label) label.textContent = "Sonando";
+                } else {
+                    iconOn.classList.add("hidden");
+                    iconOn.classList.remove("flex");
+                    iconOff.classList.remove("hidden");
+                    iconOff.classList.add("flex");
+                    toggleBtn.classList.remove("music-playing");
+                    if (label) label.textContent = "Pausada";
+                }
+            };
+
+            const setupAudio = async () => {
+                if (weddingMusic.isInitialized || typeof Tone === "undefined") return;
+                await Tone.start();
+
+                const reverb = new Tone.Reverb({ decay: 4.5, wet: 0.45 }).toDestination();
+
+                synth = new Tone.PolySynth(Tone.Synth, {
+                    oscillator: { type: "triangle" },
+                    envelope: { attack: 0.06, decay: 0.7, sustain: 0.25, release: 2.2 }
+                }).connect(reverb);
+                synth.volume.value = -13;
+
+                padSynth = new Tone.PolySynth(Tone.Synth, {
+                    oscillator: { type: "sine" },
+                    envelope: { attack: 1.4, decay: 0.8, sustain: 0.6, release: 3.0 }
+                }).connect(reverb);
+                padSynth.volume.value = -22;
+
+                const progression = [
+                    { chord: ["D3", "F#3", "A3"], notes: ["F#4", "A4", "D5", "A4"] },
+                    { chord: ["A2", "E3", "A3"], notes: ["E4", "A4", "C#5", "A4"] },
+                    { chord: ["B2", "D3", "F#3"], notes: ["D4", "F#4", "B4", "F#4"] },
+                    { chord: ["F#2", "C#3", "F#3"], notes: ["C#4", "F#4", "A4", "F#4"] },
+                    { chord: ["G2", "B2", "D3"], notes: ["B3", "D4", "G4", "B4"] },
+                    { chord: ["D2", "A2", "D3"], notes: ["A3", "D4", "F#4", "A4"] },
+                    { chord: ["G2", "B2", "D3"], notes: ["B3", "G4", "B4", "G4"] },
+                    { chord: ["A2", "E3", "A3"], notes: ["C#4", "E4", "A4", "E4"] }
+                ];
+
+                let step = 0;
+                Tone.Transport.bpm.value = 68;
+
+                melodyLoop = new Tone.Loop((time) => {
+                    const barIndex = Math.floor(step / 4) % progression.length;
+                    const beatIndex = step % 4;
+                    const current = progression[barIndex];
+
+                    if (beatIndex === 0) {
+                        padSynth.triggerAttackRelease(current.chord, "1n", time);
+                    }
+                    synth.triggerAttackRelease(current.notes[beatIndex], "2n", time);
+                    step++;
+                }, "4n");
+
+                weddingMusic.isInitialized = true;
+            };
+
+            weddingMusic.start = async () => {
+                try {
+                    await setupAudio();
+                    if (!weddingMusic.isPlaying && melodyLoop) {
+                        melodyLoop.start(0);
+                        Tone.Transport.start();
+                        weddingMusic.isPlaying = true;
+                        updateMusicUI(true);
+                    }
+                } catch (err) {
+                    updateMusicUI(false);
+                }
+            };
+
+            weddingMusic.toggle = async () => {
+                try {
+                    if (!weddingMusic.isInitialized) {
+                        await weddingMusic.start();
+                        return;
+                    }
+                    if (weddingMusic.isPlaying) {
+                        Tone.Transport.pause();
+                        weddingMusic.isPlaying = false;
+                        updateMusicUI(false);
+                    } else {
+                        await Tone.start();
+                        Tone.Transport.start();
+                        weddingMusic.isPlaying = true;
+                        updateMusicUI(true);
+                    }
+                } catch (err) {
+                    updateMusicUI(false);
+                }
+            };
+
+            if (toggleBtn) {
+                toggleBtn.addEventListener("click", weddingMusic.toggle);
+            }
+        }
+
+        /**
+         * 3. ANIMACIÓN DEL SOBRE INTERACTIVO AL ABRIR
+         */
+        function initEnvelope() {
+            const overlay = document.getElementById("envelope-overlay");
+            const envelope = document.getElementById("wedding-envelope");
+            const openBtn = document.getElementById("open-envelope-btn");
+            if (!overlay || !envelope || !openBtn) return;
+
+            let isOpened = false;
+
+            const openInvitation = () => {
+                if (isOpened) return;
+                isOpened = true;
+
+                if (weddingMusic.start) {
+                    weddingMusic.start();
+                }
+
+                envelope.classList.add("is-open");
+                openBtn.classList.add("opacity-0", "pointer-events-none");
+
+                setTimeout(() => {
+                    overlay.classList.add("opacity-0", "pointer-events-none");
+                    document.body.classList.remove("overflow-y-hidden");
+                    const musicBtn = document.getElementById("music-toggle");
+                    if (musicBtn) {
+                        musicBtn.classList.remove("hidden");
+                        musicBtn.classList.add("inline-flex");
+                    }
+                }, 1350);
+
+                setTimeout(() => {
+                    overlay.classList.add("hidden");
+                }, 2100);
+            };
+
+            envelope.addEventListener("click", openInvitation);
+            openBtn.addEventListener("click", openInvitation);
+            envelope.addEventListener("keydown", (e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    openInvitation();
+                }
+            });
+        }
+
+        /**
+         * 4. CUENTA REGRESIVA HACIA EL 12 DE DICIEMBRE DE 2026 A LAS 16:45 (UTC-5 ECUADOR)
+         */
+        function initCountdown() {
+            const targetDate = new Date("2026-12-12T16:45:00-05:00").getTime();
+            const daysEl = document.getElementById("days");
+            const hoursEl = document.getElementById("hours");
+            const minutesEl = document.getElementById("minutes");
+            const secondsEl = document.getElementById("seconds");
+
+            const updateTimer = () => {
+                const now = Date.now();
+                const diff = targetDate - now;
+
+                if (diff <= 0) {
+                    daysEl.textContent = "00";
+                    hoursEl.textContent = "00";
+                    minutesEl.textContent = "00";
+                    secondsEl.textContent = "00";
+                    return;
+                }
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                const minutes = Math.floor((diff / (1000 * 60)) % 60);
+                const seconds = Math.floor((diff / 1000) % 60);
+
+                daysEl.textContent = String(days).padStart(2, "0");
+                hoursEl.textContent = String(hours).padStart(2, "0");
+                minutesEl.textContent = String(minutes).padStart(2, "0");
+                secondsEl.textContent = String(seconds).padStart(2, "0");
+            };
+
+            updateTimer();
+            setInterval(updateTimer, 1000);
+        }
+
+        /**
+         * 5. COPIAR ENLACE DEL FORMULARIO (COMPATIBLE CON IFRAME)
+         */
+        function initCopyFormLink() {
+            const copyBtn = document.getElementById("copy-form-btn");
+            const copyText = document.getElementById("copy-btn-text");
+            const feedback = document.getElementById("copy-feedback");
+            if (!copyBtn) return;
+
+            copyBtn.addEventListener("click", () => {
+                try {
+                    const tempInput = document.createElement("textarea");
+                    tempInput.value = GOOGLE_FORM_URL;
+                    tempInput.style.position = "fixed";
+                    tempInput.style.opacity = "0";
+                    document.body.appendChild(tempInput);
+                    tempInput.select();
+                    document.execCommand("copy");
+                    document.body.removeChild(tempInput);
+
+                    if (feedback) feedback.classList.remove("hidden");
+                    if (copyText) copyText.textContent = "¡Copiado!";
+
+                    setTimeout(() => {
+                        if (feedback) feedback.classList.add("hidden");
+                        if (copyText) copyText.textContent = "Copiar enlace";
+                    }, 2800);
+                } catch (err) {
+                    window.open(GOOGLE_FORM_URL, "_blank", "noopener,noreferrer");
+                }
+            });
+        }
+
+        window.addEventListener("DOMContentLoaded", () => {
+            initPetals();
+            initWeddingMusic();
+            initEnvelope();
+            initCountdown();
+            initCopyFormLink();
+        });
+    </script>
+</body>
+</html>
